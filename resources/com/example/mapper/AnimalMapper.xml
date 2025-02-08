@@ -1,0 +1,561 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.AnimalMapper">
+    <resultMap type="com.example.domain.Animal" id="AnimalResult">
+        <id property="id" column="id" />
+        <result property="name" column="name" />
+        <result property="age" column="age" />
+        <result property="category" column="category" />
+        <result property="zooName" column="zoo_name" />
+        <result property="zooLocation" column="zoo_location" />
+    </resultMap>
+
+    <sql id="selectAnimalVo">
+        select
+        <trim prefix="" suffix="" suffixOverrides=",">
+            animal.id,
+            animal.name,
+            animal.age,
+            animal.category,
+            animal.zoo_name,
+            animal.zoo_location,
+        </trim>
+        from animal 
+    </sql>
+
+
+    <select id="selectAnimalById" parameterType="com.example.domain.Animal" resultMap="AnimalResult">
+        <include refid="selectAnimalVo"/>
+        where animal.id = #{id}
+    </select>
+
+    <select id="selectAnimalList" parameterType="com.example.domain.Animal" resultMap="AnimalResult">
+        <include refid="selectAnimalVo"/>
+        <where>
+            true
+            <if test="id != null ">
+                and animal.id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                and animal.name = #{name}
+            </if>
+            <if test="age != null and age != ''">
+                and animal.age = #{age}
+            </if>
+            <if test="category != null and category != ''">
+                and animal.category = #{category}
+            </if>
+            <if test="zooName != null and zooName != ''">
+                and animal.zoo_name = #{zooName}
+            </if>
+            <if test="zooLocation != null and zooLocation != ''">
+                and animal.zoo_location = #{zooLocation}
+            </if>
+        </where>
+    </select>
+
+    <select id="animalFixedColumnInQuery" resultMap="AnimalResult">
+        <include refid="selectAnimalVo"/>
+        where
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="list[0].id != null ">
+                    animal.id,
+                </if>
+
+                <if test="list[0].name != null and list[0].name != ''">
+                    animal.name,
+                </if>
+
+                <if test="list[0].age != null and list[0].age != ''">
+                    animal.age,
+                </if>
+
+                <if test="list[0].category != null and list[0].category != ''">
+                    animal.category,
+                </if>
+
+                <if test="list[0].zooName != null and list[0].zooName != ''">
+                    animal.zoo_name,
+                </if>
+
+                <if test="list[0].zooLocation != null and list[0].zooLocation != ''">
+                    animal.zoo_location,
+                </if>
+        </trim>
+        in
+        <foreach item="item" index="i" collection="list" open="(" separator=", " close=")">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="list[0].id != null ">
+                    #{item.id},
+                </if>
+                <if test="list[0].name != null and list[0].name != ''">
+                    #{item.name},
+                </if>
+                <if test="list[0].age != null and list[0].age != ''">
+                    #{item.age},
+                </if>
+                <if test="list[0].category != null and list[0].category != ''">
+                    #{item.category},
+                </if>
+                <if test="list[0].zooName != null and list[0].zooName != ''">
+                    #{item.zooName},
+                </if>
+                <if test="list[0].zooLocation != null and list[0].zooLocation != ''">
+                    #{item.zooLocation},
+                </if>
+            </trim>
+        </foreach>
+
+    </select>
+
+
+    <select id="animalMultiColumnOrQuery" resultMap="AnimalResult">
+        <include refid="selectAnimalVo"/>
+        where
+        <foreach item="item" index="i" collection="list" open="" separator=" or " close="">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="item.id != null ">
+                    animal.id,
+                </if>
+                <if test="item.name != null and item.name != ''">
+                    animal.name,
+                </if>
+                <if test="item.age != null and item.age != ''">
+                    animal.age,
+                </if>
+                <if test="item.category != null and item.category != ''">
+                    animal.category,
+                </if>
+                <if test="item.zooName != null and item.zooName != ''">
+                    animal.zoo_name,
+                </if>
+                <if test="item.zooLocation != null and item.zooLocation != ''">
+                    animal.zoo_location,
+                </if>
+            </trim>
+            =
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="item.id != null ">
+                    #{item.id},
+                </if>
+                <if test="item.name != null and item.name != ''">
+                    #{item.name},
+                </if>
+                <if test="item.age != null and item.age != ''">
+                    #{item.age},
+                </if>
+                <if test="item.category != null and item.category != ''">
+                    #{item.category},
+                </if>
+                <if test="item.zooName != null and item.zooName != ''">
+                    #{item.zooName},
+                </if>
+                <if test="item.zooLocation != null and item.zooLocation != ''">
+                    #{item.zooLocation},
+                </if>
+            </trim>
+        </foreach>
+    </select>
+
+    <select id="animalMultiColumnInQuery" resultMap="AnimalResult">
+        <include refid="selectAnimalVo"/>
+        where
+        <foreach item="item" index="i" collection="list" open="" separator=" or " close="">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="item.id != null ">
+                    animal.id,
+                </if>
+                <if test="item.name != null and item.name != ''">
+                    animal.name,
+                </if>
+                <if test="item.age != null and item.age != ''">
+                    animal.age,
+                </if>
+                <if test="item.category != null and item.category != ''">
+                    animal.category,
+                </if>
+                <if test="item.zooName != null and item.zooName != ''">
+                    animal.zoo_name,
+                </if>
+                <if test="item.zooLocation != null and item.zooLocation != ''">
+                    animal.zoo_location,
+                </if>
+            </trim>
+            in
+            <trim prefix="((" suffix="))" suffixOverrides=",">
+                <if test="item.id != null ">
+                    #{item.id},
+                </if>
+                <if test="item.name != null and item.name != ''">
+                    #{item.name},
+                </if>
+                <if test="item.age != null and item.age != ''">
+                    #{item.age},
+                </if>
+                <if test="item.category != null and item.category != ''">
+                    #{item.category},
+                </if>
+                <if test="item.zooName != null and item.zooName != ''">
+                    #{item.zooName},
+                </if>
+                <if test="item.zooLocation != null and item.zooLocation != ''">
+                    #{item.zooLocation},
+                </if>
+            </trim>
+        </foreach>
+
+    </select>
+
+    <select id="animalMultiColumnUnionQuery" resultMap="AnimalResult">
+        <foreach item="item" index="i" collection="list" open="" separator=" union " close="">
+            <trim prefix="(" suffix=")" suffixOverrides="">
+                <include refid="selectAnimalVo"/>
+                where
+                <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="item.id != null ">
+                        animal.id,
+                    </if>
+                    <if test="item.name != null and item.name != ''">
+                        animal.name,
+                    </if>
+                    <if test="item.age != null and item.age != ''">
+                        animal.age,
+                    </if>
+                    <if test="item.category != null and item.category != ''">
+                        animal.category,
+                    </if>
+                    <if test="item.zooName != null and item.zooName != ''">
+                        animal.zoo_name,
+                    </if>
+                    <if test="item.zooLocation != null and item.zooLocation != ''">
+                        animal.zoo_location,
+                    </if>
+                </trim>
+                =
+                <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="item.id != null ">
+                        #{item.id},
+                    </if>
+                    <if test="item.name != null and item.name != ''">
+                        #{item.name},
+                    </if>
+                    <if test="item.age != null and item.age != ''">
+                        #{item.age},
+                    </if>
+                    <if test="item.category != null and item.category != ''">
+                        #{item.category},
+                    </if>
+                    <if test="item.zooName != null and item.zooName != ''">
+                        #{item.zooName},
+                    </if>
+                    <if test="item.zooLocation != null and item.zooLocation != ''">
+                        #{item.zooLocation},
+                    </if>
+                </trim>
+            </trim>
+        </foreach>
+    </select>
+
+    <select id="animalMultiColumnUnionAllQuery" resultMap="AnimalResult">
+        <foreach item="item" index="i" collection="list" open="(" separator=" union all " close=")">
+            <trim prefix="(" suffix=")" suffixOverrides="">
+                <include refid="selectAnimalVo"/>
+                where
+                <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="item.id != null ">
+                        animal.id,
+                    </if>
+                    <if test="item.name != null and item.name != ''">
+                        animal.name,
+                    </if>
+                    <if test="item.age != null and item.age != ''">
+                        animal.age,
+                    </if>
+                    <if test="item.category != null and item.category != ''">
+                        animal.category,
+                    </if>
+                    <if test="item.zooName != null and item.zooName != ''">
+                        animal.zoo_name,
+                    </if>
+                    <if test="item.zooLocation != null and item.zooLocation != ''">
+                        animal.zoo_location,
+                    </if>
+                </trim>
+                =
+                <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="item.id != null ">
+                        #{item.id},
+                    </if>
+                    <if test="item.name != null and item.name != ''">
+                        #{item.name},
+                    </if>
+                    <if test="item.age != null and item.age != ''">
+                        #{item.age},
+                    </if>
+                    <if test="item.category != null and item.category != ''">
+                        #{item.category},
+                    </if>
+                    <if test="item.zooName != null and item.zooName != ''">
+                        #{item.zooName},
+                    </if>
+                    <if test="item.zooLocation != null and item.zooLocation != ''">
+                        #{item.zooLocation},
+                    </if>
+                </trim>
+            </trim>
+        </foreach>
+    </select>
+
+    <insert id="insertAnimal" parameterType="com.example.domain.Animal">
+        insert into animal
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null ">
+                id,
+            </if>
+            <if test="name != null and name != ''">
+                name,
+            </if>
+            <if test="age != null and age != ''">
+                age,
+            </if>
+            <if test="category != null and category != ''">
+                category,
+            </if>
+            <if test="zooName != null and zooName != ''">
+                zoo_name,
+            </if>
+            <if test="zooLocation != null and zooLocation != ''">
+                zoo_location,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null ">
+                #{id},
+            </if>
+            <if test="name != null and name != ''">
+                #{name},
+            </if>
+            <if test="age != null and age != ''">
+                #{age},
+            </if>
+            <if test="category != null and category != ''">
+                #{category},
+            </if>
+            <if test="zooName != null and zooName != ''">
+                #{zooName},
+            </if>
+            <if test="zooLocation != null and zooLocation != ''">
+                #{zooLocation},
+            </if>
+        </trim>
+    </insert>
+
+    <insert id="batchInsertAnimal" parameterType="java.util.List">
+        insert into animal
+            (id, name, age, category, zoo_name, zoo_location)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id}, #{item.name}, #{item.age}, #{item.category}, #{item.zooName}, #{item.zooLocation})
+        </foreach>
+    </insert>
+
+    <update id="updateAnimal" parameterType="com.example.domain.Animal">
+        update animal
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="age != null and age != ''">
+                age = #{age},
+            </if>
+            <if test="category != null and category != ''">
+                category = #{category},
+            </if>
+            <if test="zooName != null and zooName != ''">
+                zoo_name = #{zooName},
+            </if>
+            <if test="zooLocation != null and zooLocation != ''">
+                zoo_location = #{zooLocation},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="batchUpdateAnimal" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            update animal
+            <trim prefix="SET" suffixOverrides=",">
+                <if test="item.name != null and item.name != ''">
+                    name = #{item.name},
+                </if>
+                <if test="item.age != null and item.age != ''">
+                    age = #{item.age},
+                </if>
+                <if test="item.category != null and item.category != ''">
+                    category = #{item.category},
+                </if>
+                <if test="item.zooName != null and item.zooName != ''">
+                    zoo_name = #{item.zooName},
+                </if>
+                <if test="item.zooLocation != null and item.zooLocation != ''">
+                    zoo_location = #{item.zooLocation},
+                </if>
+            </trim>
+            where id = #{item.id}
+        </foreach>
+    </update>
+
+    <delete id="deleteAnimalById">
+        delete from animal
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteAnimal" parameterType="com.example.domain.Animal">
+        delete from animal
+        <where>
+            true
+            <if test="id != null ">
+                and id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="age != null and age != ''">
+                and age = #{age}
+            </if>
+            <if test="category != null and category != ''">
+                and category = #{category}
+            </if>
+            <if test="zooName != null and zooName != ''">
+                and zoo_name = #{zooName}
+            </if>
+            <if test="zooLocation != null and zooLocation != ''">
+                and zoo_location = #{zooLocation}
+            </if>
+        </where>
+
+    </delete>
+
+    <delete id="batchDeleteAnimal" parameterType="java.util.List">
+        delete from animal
+        where (id) in
+        <foreach item="item" collection="list" open="(" separator=", " close=")">
+            (#{item.id})
+        </foreach>
+    </delete>
+
+    <delete id="deleteAnimalByIdArr">
+        delete from animal
+        where
+        <choose>
+            <when test="idArr != null and idArr.length > 0  and {idArr.length}.stream().distinct().count() == 1">
+                (id) in
+                <foreach item="id" index="i" collection="idArr" open="(" separator=", " close=")">
+                    (#{idArr[${i}]})
+                </foreach>
+            </when>
+            <otherwise>
+                false
+            </otherwise>
+        </choose>
+
+    </delete>
+
+    <update id="saveAnimalById" parameterType="com.example.domain.Animal">
+        insert into animal
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null ">
+                id,
+            </if>
+            <if test="name != null and name != ''">
+                name,
+            </if>
+            <if test="age != null and age != ''">
+                age,
+            </if>
+            <if test="category != null and category != ''">
+                category,
+            </if>
+            <if test="zooName != null and zooName != ''">
+                zoo_name,
+            </if>
+            <if test="zooLocation != null and zooLocation != ''">
+                zoo_location,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null ">
+                #{id},
+            </if>
+            <if test="name != null and name != ''">
+                #{name},
+            </if>
+            <if test="age != null and age != ''">
+                #{age},
+            </if>
+            <if test="category != null and category != ''">
+                #{category},
+            </if>
+            <if test="zooName != null and zooName != ''">
+                #{zooName},
+            </if>
+            <if test="zooLocation != null and zooLocation != ''">
+                #{zooLocation},
+            </if>
+        </trim>
+        on duplicate key update
+        <trim suffixOverrides=",">
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="age != null and age != ''">
+                age = #{age},
+            </if>
+            <if test="category != null and category != ''">
+                category = #{category},
+            </if>
+            <if test="zooName != null and zooName != ''">
+                zoo_name = #{zooName},
+            </if>
+            <if test="zooLocation != null and zooLocation != ''">
+                zoo_location = #{zooLocation},
+            </if>
+        </trim>
+    </update>
+
+    <update id="batchSaveAnimalById" parameterType="java.util.List">
+        insert into animal
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+            name,
+            age,
+            category,
+            zoo_name,
+            zoo_location,
+        </trim>
+        values
+        <foreach item="item" index="i" collection="list" open="" separator=", " close="">
+            (
+                #{item.id},
+                #{item.name},
+                #{item.age},
+                #{item.category},
+                #{item.zooName},
+                #{item.zooLocation}
+            )
+        </foreach>
+        on duplicate key update
+            name = case when values(name) is not null and values(name) != ''then values(name) else name end,
+            age = case when values(age) is not null and values(age) != ''then values(age) else age end,
+            category = case when values(category) is not null and values(category) != ''then values(category) else category end,
+            zoo_name = case when values(zoo_name) is not null and values(zoo_name) != ''then values(zoo_name) else zoo_name end,
+            zoo_location = case when values(zoo_location) is not null and values(zoo_location) != ''then values(zoo_location) else zoo_location end
+    </update>
+
+
+
+</mapper>
